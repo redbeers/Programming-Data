@@ -1,0 +1,28 @@
+@RequestMapping("loginSubmitAjax.do")
+	
+	@ResponseBody //사용자 정보를 가지고 온다
+	public String loginProcessing(MemberVO vo, HttpSession session) throws Exception {
+		String msg = "";
+		MemberVO membervo = memberService.selectMemberCount(vo);
+		if (membervo != null) {
+			// session 생성
+			session.setAttribute("memberId", membervo.getMemberId());
+			session.setAttribute("memberNickname", membervo.getMemberNickname());
+			session.setAttribute("memberGubun", membervo.getMemberGubun());
+			// message 처리
+			msg = "ok";
+		} else {
+			msg = "no";
+		}
+
+		return msg;
+	}
+
+	@RequestMapping(value = "logout.do", method = RequestMethod.GET)
+	public String logout(HttpSession session) {
+		session.removeAttribute("memberId");
+		session.removeAttribute("memberNickname");
+		session.removeAttribute("memberGubun");
+		return "redirect:home.do";
+
+	}
